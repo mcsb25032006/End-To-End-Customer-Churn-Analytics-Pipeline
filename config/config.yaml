@@ -1,0 +1,41 @@
+# ==============================================================================
+# Customer Churn Analytics Pipeline Configuration
+# ==============================================================================
+
+project:
+  name: "End To End Customer Churn Analytics Pipeline"
+  version: "1.0.0"
+  random_state: 42
+
+paths:
+  raw_data_path: "data/raw/churn_analysis.csv"
+  processed_data_path: "data/processed/churn_analysis.csv"
+  model_save_path: "models/churn_pipeline.joblib"
+  metrics_save_path: "models/metrics.json"
+  figures_dir: "reports/figures"
+  sql_dir: "sql"
+
+data:
+  target_column: "churn_flag"
+  id_column: "customerID"
+  numerical_features:
+    - "tenure"
+    - "MonthlyCharges"
+    - "TotalCharges"
+  categorical_features:
+    - "Contract"
+    - "PaymentMethod"
+
+split:
+  test_size: 0.25
+  stratify: true
+  random_state: 42
+
+model:
+  algorithm: "LogisticRegression"
+  hyperparameters:
+    C: 1.0
+    solver: "lbfgs"
+    max_iter: 1000
+    random_state: 42
+  decision_threshold: 0.5

@@ -1,0 +1,50 @@
+// ==============================================================================
+// DAX Measures for Customer Churn Analytics Dashboard
+// Table: churn_analysis
+// ==============================================================================
+
+// 1. Total Customer Count
+Total Customers = COUNTROWS('churn_analysis')
+
+// 2. Churned Customer Count
+Churned Customers = 
+CALCULATE(
+    COUNTROWS('churn_analysis'),
+    'churn_analysis'[churn_flag] = 1
+)
+
+// 3. Retained Customer Count
+Retained Customers = 
+CALCULATE(
+    COUNTROWS('churn_analysis'),
+    'churn_analysis'[churn_flag] = 0
+)
+
+// 4. Churn Rate Percentage
+Churn Rate % = 
+DIVIDE(
+    [Churned Customers],
+    [Total Customers],
+    0
+)
+
+// 5. Total Historical Revenue
+Total Revenue = SUM('churn_analysis'[TotalCharges])
+
+// 6. Average Monthly Bill / Charge
+Avg Monthly Charge = AVERAGE('churn_analysis'[MonthlyCharges])
+
+// 7. Monthly Revenue at Risk (Monthly charges of currently churned/at-risk customers)
+Monthly Revenue at Risk = 
+CALCULATE(
+    SUM('churn_analysis'[MonthlyCharges]),
+    'churn_analysis'[churn_flag] = 1
+)
+
+// 8. Calculated Column: Categorical Churn Label
+Churn Label = 
+IF(
+    'churn_analysis'[churn_flag] = 1, 
+    "Churned", 
+    "Not Churned"
+)
